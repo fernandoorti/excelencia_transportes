@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Editar Pedido</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>Editar Pedido de {{ pedido.cliente }}</h2>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="cliente" class="form-label">Cliente</label>
+                            {{ form.cliente }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="destino" class="form-label">Destino</label>
+                            {{ form.destino }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="ubicacion_cliente" class="form-label">Ubicación del Cliente</label>
+                            {{ form.ubicacion_cliente }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="unidad_rt" class="form-label">Unidad RT</label>
+                            {{ form.unidad_rt }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="base" class="form-label">Base</label>
+                            {{ form.base }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            {{ form.telefono }}
+                        </div>
+                        
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="fecha_hora_pedido" class="form-label">Fecha y Hora del Pedido</label>
+                            {{ form.fecha_hora_pedido }}
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                        <a href="{% url 'pedidos:lista_pedidos' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

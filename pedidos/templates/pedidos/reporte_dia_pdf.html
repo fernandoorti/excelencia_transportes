@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Excelencia en Transportes - Reporte del Día</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2, h3 { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;    table-layout: auto; /* Ajusta el ancho de las columnas automáticamente */ }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left;     word-wrap: break-word; /* Evita que el texto largo se salga de la celda */}
+        th { background-color: #f4f4f4; color: #333; }
+        .pedido-cancelado { background-color: #ff4d4d; color: white; }
+        .encabezado { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .encabezado img { max-height: 60px; }
+        .footer { text-align: center; font-size: 10px; color: #666; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="encabezado">
+        <div>
+            <h1>Excelencia en Transportes</h1>
+            <h2>Reporte del Día</h2>
+        </div>
+        <img src="path_to_logo.png" alt="Logo de la Empresa">
+    </div>
+
+    <p><strong>Fecha de generación:</strong> {{ fecha_inicio }} - {{ fecha_fin }}</p>
+
+    <h2>Resumen del Día por Operador y Turno</h2>
+    {% for operador, resumen in resumen_por_operador.items %}
+        <h3>{{ operador }}</h3>
+        <p><strong>Total de pedidos:</strong> {{ resumen.total_pedidos }}</p>
+        <p><strong>Pedidos cancelados:</strong> {{ resumen.total_cancelados }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Destino</th>
+                    <th>Teléfono</th>
+                    <th>Unidad RT</th>
+                    <th>Fecha y Hora</th>
+                    <th>Estado</th>
+                    <th>Motivo de Cancelación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in resumen.pedidos %}
+                    <tr {% if pedido.cancelado %} class="pedido-cancelado" {% endif %}>
+                        <td>{{ pedido.cliente }}</td>
+                        <td>{{ pedido.destino }}</td>
+                        <td>{{ pedido.telefono.nombre }}</td>
+                        <td>{% if pedido.unidad_rt %}{{ pedido.unidad_rt.nombre }}{% else %}--------{% endif %}</td>
+                        <td>{{ pedido.fecha_hora_pedido }}</td>
+                        <td>{% if pedido.cancelado %} Cancelado {% else %} Activo {% endif %}</td>
+                        <td>{{ pedido.motivo_cancelacion }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+
+    <h2>Resumen General</h2>
+    <table>
+        <tr>
+            <th>Total de pedidos</th>
+            <td>{{ total_pedidos }}</td>
+        </tr>
+        <tr>
+            <th>Total de unidades movilizadas</th>
+            <td>{{ total_unidades_movilizadas }}</td>
+        </tr>
+        <tr>
+            <th>Total de bases movilizadas</th>
+            <td>{{ total_bases_movilizadas }}</td>
+        </tr>
+        <tr>
+            <th>Teléfonos con más llamadas</th>
+            <td>
+                {% for telefono in telefonos_llamadas %}
+                    {{ telefono.telefono__nombre }}: {{ telefono.total_llamadas }} llamadas<br>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Teléfono con más llamadas</th>
+            <td>{{ telefono_mas_solicitado.telefono__nombre }} ({{ telefono_mas_solicitado.count }} llamadas)</td>
+        </tr>
+        <tr>
+            <th>Promedio de viajes por hora</th>
+            <td>{{ promedio_viajes_hora }}</td>
+        </tr>
+        <tr>
+            <th>Unidades RT más movilizadas</th>
+            <td>{{ unidad_rt_mas_solicitada.unidad_rt__nombre }} ({{ unidad_rt_mas_solicitada.count }} viajes)</td>
+        </tr>
+        <tr>
+            <th>Bases más movilizadas</th>
+            <td>{{ base_mas_solicitada.base__nombre }} ({{ base_mas_solicitada.count }} viajes)</td>
+        </tr>
+        <tr>
+            <th>Unidades RT con más de 5 viajes</th>
+            <td>
+                {% for unidad in unidades_rt_mas_de_5_viajes %}
+                    {{ unidad.unidad_rt__nombre }}: {{ unidad.total_viajes }} viajes<br>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <th>Unidades RT y su total de viajes</th>
+            <td>
+                {% for unidad in unidades_rt_viajes %}
+                    {{ unidad.unidad_rt__nombre }}: {{ unidad.total_viajes }} viajes<br>
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+
+    <h2>Total de viajes cancelados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Unidad RT</th>
+                <th>Total de viajes cancelados</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancelado in viajes_cancelados %}
+                <tr>
+                    <td>{{ cancelado.unidad_rt__nombre }}</td>
+                    <td>{{ cancelado.total_cancelados }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Reporte generado automáticamente por el sistema "Excelencia en Transportes" el {{ fecha_fin }}.
+    </div>
+</body>
+</html>

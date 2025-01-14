@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Usuario</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2 class="form-title">Eliminar Usuario</h2>
+        <p class="warning-text">¿Estás seguro de que deseas eliminar al usuario <strong>{{ usuario.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+        <form method="POST" class="form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="{% url 'pedidos:usuarios_vistas' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte del Día</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .pedido-cancelado {
+            background-color: #ff4d4d;
+            color: white;
+        }
+        .resumen {
+            margin-top: 30px;
+        }
+        .resumen h4 {
+            font-weight: bold;
+        }
+        .resumen ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .resumen ul li {
+            margin-bottom: 10px;
+        }
+        .alert {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Reporte del Día</h2>
+
+        <!-- Cuadro de alerta para pedidos cancelados -->
+        <div class="alert">
+            Los pedidos en rojo son pedidos cancelados
+        </div>
+
+        <!-- Tabla de pedidos -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Destino</th>
+                    <th>Unidad RT</th>
+                    <th>Base</th>
+                    <th>Fecha y Hora</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr class="{% if pedido.cancelado %}pedido-cancelado{% endif %}">
+                    <td>{{ pedido.cliente }}</td>
+                    <td>{{ pedido.destino }}</td>
+                    <td>{{ pedido.unidad_rt.nombre }}</td>
+                    <td>{{ pedido.base.nombre }}</td>
+                    <td>{{ pedido.fecha_hora_pedido }}</td>
+                    <td>{% if pedido.cancelado %}Cancelado{% else %}Activo{% endif %}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No hay pedidos para mostrar.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Resumen de datos -->
+        <div class="resumen">
+            <h4>Resumen del día</h4>
+            <ul>
+                <li>Total de pedidos: {{ total_pedidos }}</li>
+                <li>Total de unidades movilizadas: {{ total_unidades_movilizadas }}</li>
+                <li>Unidad RT más solicitada: {% if unidad_rt_mas_solicitada %}{{ unidad_rt_mas_solicitada.unidad_rt__nombre }} ({{ unidad_rt_mas_solicitada.count }} viajes){% else %}No disponible{% endif %}</li>
+                <li>Total de bases utilizadas: {{ total_bases_utilizadas }}</li>
+                <li>Base más solicitada: {% if base_mas_solicitada %}{{ base_mas_solicitada.base__nombre }} ({{ base_mas_solicitada.count }} viajes){% else %}No disponible{% endif %}</li>
+                <li>Unidades RT con más de cinco viajes:
+                    <ul>
+                        {% for unidad in unidades_con_mas_de_cinco_viajes %}
+                            <li>{{ unidad.unidad_rt__nombre }} ({{ unidad.count }} viajes)</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li>Total de viajes cancelados: {{ pedidos_cancelados.count }}</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

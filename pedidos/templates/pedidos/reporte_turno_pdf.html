@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte del Turno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h2 {
+            text-align: center;
+            color: #004085;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        h3 {
+            color: #004085;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #004085;
+            padding-bottom: 5px;
+        }
+        p {
+            margin: 0;
+            padding: 5px 0;
+        }
+        ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: auto; /* Ajusta el ancho de las columnas automáticamente */
+    
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+            word-wrap: break-word; /* Evita que el texto largo se salga de la celda */
+    
+        }
+        th {
+            background-color: #004085;
+            color: white;
+        }
+        .pedido-cancelado {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .highlight {
+            background-color: #e2e3e5;
+        }
+    </style>
+</head>
+<body>
+    <h2>Reporte del Turno</h2>
+    
+    <p><strong>Nombre: </strong> {{ user.first_name }} {{ user.last_name }} <strong>Turno:</strong> {{ turno }}</p>
+    <p><strong>Fecha de inicio: </strong> {{ fecha_inicio }} <strong>Fecha de fin:</strong> {{ fecha_fin }}</p>
+
+    <h3>Resumen del Turno</h3>
+    <ul>
+        <li><strong>Total de pedidos:</strong> {{ total_pedidos }}</li>
+        <li><strong>Total de unidades movilizadas:</strong> {{ total_unidades_movilizadas }}</li>
+        <li><strong>Unidad RT más solicitada:</strong> {% if unidad_rt_mas_solicitada %}{{ unidad_rt_mas_solicitada.unidad_rt__nombre }}{% else %}No disponible{% endif %}</li>
+        <li><strong>Base más solicitada:</strong> {% if base_mas_solicitada %}{{ base_mas_solicitada.base__nombre }}{% else %}No disponible{% endif %}</li>
+        <li><strong>Promedio de viajes por unidad RT:</strong> {{ promedio_viajes_por_unidad }}</li>
+        <li><strong>Promedio de viajes por base:</strong> {{ promedio_viajes_por_base }}</li>
+        <li><strong>Total de viajes cancelados:</strong> {{ pedidos_cancelados.count }}</li>
+        <li><strong>Unidades RT con más de cinco viajes:</strong>
+            <ul>
+                {% for unidad in unidades_con_mas_de_cinco_viajes %}
+                    <li>{{ unidad.unidad_rt__nombre }} ({{ unidad.count }} viajes)</li>
+                {% endfor %}
+            </ul>
+        </li>
+        <li><strong>Teléfono más solicitado:</strong> {% if telefono_mas_solicitado %}{{ telefono_mas_solicitado.telefono }} ({{ telefono_mas_solicitado.count }} llamadas){% else %}No disponible{% endif %}</li>
+        <li><strong>Teléfonos con más de cinco llamadas:</strong>
+            <ul>
+                {% for telefono in telefonos_con_mas_de_cinco_llamadas %}
+                    <li>linea {{ telefono.telefono }} ({{ telefono.count }} llamadas)</li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+
+    <h3>Líneas telefónicas y llamadas</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Lineas telefonicas
+                    <ul>
+                        <ul>1.- 5558808251</ul>
+                        <ul>2.- 5558178115</ul>
+                        <ul>3.- 5563066325</ul>
+                        <ul>4.- 5551527971</ul>
+                    </ul>
+                    
+                </li>
+            </th>
+                <th>Total de llamadas
+                    {% for telefono in telefonos_top %}
+                    <ul>Linea {{ telefono.telefono }}  ({{ telefono.count }} llamadas en total)</ul>
+                {% endfor %}
+                    </th>
+
+</tr>
+</thead>
+</table>
+
+    <h3>Pedidos</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Ubicacion</th>
+                <th>Destino</th>
+                <th>Teléfono</th>
+                <th>Unidad RT</th>
+                <th>Base</th>
+                <th>Fecha y Hora</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos %}
+            <tr class="{% if pedido.cancelado %}pedido-cancelado{% endif %}">
+                <td>{{ pedido.cliente }}</td>
+                <td>{{ pedido.ubicacion_cliente }}</td>
+                <td>{{ pedido.destino }}</td>
+                <td>{{ pedido.telefono.nombre }}</td>
+                <td>{% if pedido.unidad_rt %}{{ pedido.unidad_rt.nombre }}{% else %}--------{% endif %}</td>
+                <td>{{ pedido.base.nombre }}</td>
+                <td>{{ pedido.fecha_hora_pedido }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Pedidos Cancelados</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Destino</th>
+                <th>Teléfono</th>
+                <th>Unidad RT</th>
+                <th>Base</th>
+                <th>Fecha y Hora</th>
+                <th>Motivo de Cancelación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidos_cancelados %}
+            <tr class="pedido-cancelado">
+                <td>{{ pedido.cliente }}</td>
+                <td>{{ pedido.destino }}</td>
+                <td>{{ pedido.telefono.nombre }}</td>
+                <td>{% if pedido.unidad_rt %}{{ pedido.unidad_rt.nombre }}{% else %}--------{% endif %}</td>
+                <td>{{ pedido.base.nombre }}</td>
+                <td>{{ pedido.fecha_hora_pedido }}</td>
+                <td>{{ pedido.motivo_cancelacion }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

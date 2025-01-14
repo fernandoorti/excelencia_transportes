@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Usuario</title>
+    <style>
+        /* General */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2.form-title {
+            font-size: 24px;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        h3.form-section-title {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #495057;
+        }
+
+        /* Formularios */
+        form {
+            margin-bottom: 30px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        /* Botones */
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        a.btn {
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="form-title">Agregar Usuario</h2>
+        <form method="POST" class="form">
+            {% csrf_token %}
+            <h3 class="form-section-title">Información de Usuario</h3>
+            {{ user_form.non_field_errors }}
+            {{ user_form.as_p }}
+
+            <h3 class="form-section-title">Perfil de Usuario</h3>
+            {{ profile_form.non_field_errors }}
+            {{ profile_form.as_p }}
+
+            <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+        </form>
+        <a href="{% url 'pedidos:usuarios_vistas' %}" class="btn btn-secondary">Regresar a la lista de usuarios</a>
+    </div>
+</body>
+</html>

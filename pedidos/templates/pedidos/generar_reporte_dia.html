@@ -1,0 +1,76 @@
+<!-- generar_reporte_dia.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Reporte del Día</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Generar Reporte del Día</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="fecha_inicio">Fecha y hora de inicio:</label>
+                <input type="datetime-local" name="fecha_inicio" id="fecha_inicio" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_fin">Fecha y hora de fin:</label>
+                <input type="datetime-local" name="fecha_fin" id="fecha_fin" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Generar Reporte</button>
+          
+        </form>
+        <a href="{% url 'pedidos:menu_admin' %}" class="btn">menu</a>
+        
+    </div>
+    
+</body>
+</html>

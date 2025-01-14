@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidades y Bases</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn {
+            padding: 10px 15px;
+            color: white;
+            background-color: #28a745;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+        .btn-edit {
+            background-color: #ffc107;
+        }
+        .btn-delete {
+            background-color: #dc3545;
+        }
+        .btn:hover {
+            opacity: 0.8;
+        }
+        .add-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #17a2b8;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Gestión de Unidades y Bases</h2>
+
+        <!-- Botón para agregar nueva Unidad RT -->
+        <a href="{% url 'pedidos:menu_admin' %}" class="add-btn">Menu</a>
+        <a href="{% url 'pedidos:agregar_unidad_rt' %}" class="add-btn">Agregar Nueva Unidad RT</a>
+
+        <!-- Tabla de Unidades RT -->
+        <h3>Unidades RT</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre de la Unidad</th>
+                    <th>Estado</th>
+                    <th>Operador Asignado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unidad in unidades_rt %}
+                <tr>
+                    <td>{{ unidad.nombre }}</td>
+                    <td>{{ unidad.estado }}</td>
+                    <td>{{ unidad.nombre_operador }}</td>
+                    <td>
+                        <a href="{% url 'pedidos:editar_unidad_rt' unidad.id %}" class="btn btn-edit">Editar</a>
+                        <a href="{% url 'pedidos:eliminar_unidad_rt' unidad.id %}" class="btn btn-delete">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Botón para agregar nueva Base -->
+        <a href="{% url 'pedidos:agregar_base' %}" class="add-btn">Agregar Nueva Base</a>
+
+        <!-- Tabla de Bases -->
+        <h3>Bases</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre de la Base</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for base in bases %}
+                <tr>
+                    <td>{{ base.nombre }}</td>
+                    <td>{{ base.direccion }}</td>
+                    <td>
+                        <a href="{% url 'pedidos:editar_base' base.id %}" class="btn btn-edit">Editar</a>
+                        <a href="{% url 'pedidos:eliminar_base' base.id %}" class="btn btn-delete">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

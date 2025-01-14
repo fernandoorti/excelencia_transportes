@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Operador</title>
+    <style>
+        /* General */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            padding: 10px 15px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Estilo para el mensaje cuando no hay operadores */
+        .no-operators {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Seleccionar Operador</h1>
+
+        <ul>
+            {% for operador in operadores %}
+                <li><a href="{% url 'pedidos:ver_pedidos_por_usuario' operador.id %}">{{ operador.get_full_name }}</a></li>
+            {% empty %}
+                <li class="no-operators">No hay operadores disponibles.</li>
+            {% endfor %}
+            <a href="{% url 'pedidos:menu_admin' %}" class="btn">menu</a>
+        </ul>
+    </div>
+</body>
+</html>

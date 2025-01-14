@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Unidad RT</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            background-color: #6c757d;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Eliminar Unidad RT</h2>
+        <p>¿Estás seguro de que deseas eliminar la unidad <strong>{{ unidad.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn">Eliminar</button>
+            <a href="{% url 'pedidos:unidades_bases' %}" class="btn btn-cancel">Cancelar</a>
+        </form>
+    </div>
+</body>
+</html>
