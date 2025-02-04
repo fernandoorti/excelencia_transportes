@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-r!c+8zd6%*y#wk1wwz$9l-p_4tkktf*mfq3d%bhg0(6#gso95p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['excelencia-transportes.onrender.com', 'yourdomain.com']
+ALLOWED_HOSTS = ['excelencia-transportes.onrender.com', 'yourdomain.com', '127.0.0.1', 'localhost', '192.168.1.37']
+
 
 
 
@@ -84,13 +85,14 @@ WSGI_APPLICATION = 'excelencia_transportes.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'excelencia_transportes',
-        'USER': 'postgres',
-        'PASSWORD': '561014',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'excelencia_transportes',  # Ya tienes este valor
+        'USER': 'excelencia_transportes_user',  # Usa el usuario proporcionado por Render
+        'PASSWORD': 'p0R0WWPXZaP2NRWpHWC0DUyVGA3CcOkw',  # Usa la contraseña proporcionada por Render
+        'HOST': 'dpg-cuh52156l47c73bdonu0-a.oregon-postgres.render.com',  # Usa el host externo proporcionado por Render
+        'PORT': '5432',  # Este puerto sigue siendo el mismo
     }
 }
+
 
 
 # Password validation
