@@ -19,8 +19,17 @@ from django.utils.timezone import make_aware
 from datetime import datetime
 from .models import Pedido
 from django.core.paginator import Paginator
-
-
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from django.utils.timezone import make_aware
+from datetime import datetime
+from .models import Pedido
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from django.contrib.auth.models import User
+from .models import Pedido
+from django.utils import timezone
+from django.db.models import Q
 # Vista para mostrar detalles de un pedido
 @login_required
 def detalle_pedido(request, pedido_id):
@@ -51,11 +60,7 @@ def cancelar_pedido(request, pedido_id):
 
     return render(request, 'pedidos/cancelar_pedido.html', {'pedido': pedido})
 # Formulario para cancelar un pedido
-from django.shortcuts import render
-from django.contrib.auth.models import User
-from .models import Pedido
-from django.utils import timezone
-from django.db.models import Q
+
 
 def ver_pedidos_por_usuario(request, usuario_id):
     # Obtener el usuario operador seleccionado
@@ -83,27 +88,28 @@ def seleccionar_operador(request):
     return render(request, 'pedidos/seleccionar_operador.html', {'operadores': operadores})
 
 # Vista para listar pedidos con paginación y filtro
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from django.utils.timezone import make_aware
-from datetime import datetime
-from .models import Pedido
-from django.core.paginator import Paginator
+from django.core.cache import cache
 
-@login_required  # Decorador correctamente ubicado
+@login_required
 def lista_pedidos(request):
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
 
-    if fecha_inicio and fecha_fin:
-        fecha_inicio_dt = make_aware(datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M'))
-        fecha_fin_dt = make_aware(datetime.strptime(fecha_fin, '%Y-%m-%dT%H:%M'))
-        pedidos = Pedido.objects.filter(fecha_hora_pedido__range=(fecha_inicio_dt, fecha_fin_dt))
-    else:
-        pedidos = Pedido.objects.all().order_by('-fecha_hora_pedido')
+    cache_key = f'pedidos_{fecha_inicio}_{fecha_fin}'
+    pedidos = cache.get(cache_key)
 
+    if not pedidos:
+        if fecha_inicio and fecha_fin:
+            fecha_inicio_dt = make_aware(datetime.strptime(fecha_inicio, '%Y-%m-%dT%H:%M'))
+            fecha_fin_dt = make_aware(datetime.strptime(fecha_fin, '%Y-%m-%dT%H:%M'))
+            pedidos = Pedido.objects.filter(fecha_hora_pedido__range=(fecha_inicio_dt, fecha_fin_dt))
+        else:
+            pedidos = Pedido.objects.all().order_by('-fecha_hora_pedido')
 
-    paginator = Paginator(pedidos, 50)  # Mostrar 10 pedidos por página
+        # Cacheamos los pedidos por 5 minutos
+        cache.set(cache_key, pedidos, timeout=300)
+
+    paginator = Paginator(pedidos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -113,7 +119,7 @@ def lista_pedidos(request):
         'fecha_fin': fecha_fin,
     })
 
-#
+
 @login_required  # Decorador correctamente ubicado
 def lista_general_de_pedidos(request):
     fecha_inicio = request.GET.get('fecha_inicio')
@@ -849,16 +855,13 @@ def generar_reporte_turno(request):
             'telefonos_con_mas_de_cinco_llamadas': telefonos_con_mas_de_cinco_llamadas,
             'telefonos_top': telefonos_top,
             'fecha_inicio': fecha_inicio,
-            'fecha_fin': fecha_fin
-            
-            
+            'fecha_fin': fecha_fin 
         }
 
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'inline; filename="reporte_turno.pdf"'
         template = get_template(template_path)
         html = template.render(context)
-
         # Convertir HTML a PDF
         pisa_status = pisa.CreatePDF(html, dest=response)
         if pisa_status.err:
